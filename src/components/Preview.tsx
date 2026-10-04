@@ -1,5 +1,11 @@
 import { useLanguage } from '../i18n';
-import { useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 import {
   Bell,
   Bluetooth,
@@ -10,7 +16,6 @@ import {
   Folder,
   Maximize2,
   Minus,
-  Monitor,
   Search,
   Terminal,
   Volume2,
@@ -78,6 +83,15 @@ type WindowName = 'terminal' | 'editor' | 'files' | 'notification';
 export function Preview({ theme }: { theme: ThemeDocument }) {
   const { t } = useLanguage();
   const desktopRef = useRef<HTMLDivElement>(null);
+  const [compact, setCompact] = useState(
+    () => window.matchMedia('(max-width: 760px)').matches,
+  );
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 760px)');
+    const update = () => setCompact(media.matches);
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
   const [menu, setMenu] = useState(false);
   const [visible, setVisible] = useState<Record<WindowName, boolean>>({
     terminal: true,
@@ -119,7 +133,12 @@ export function Preview({ theme }: { theme: ThemeDocument }) {
         </button>
       </div>
       <div className="desktop-frame">
-        <div className="desktop" style={styles} ref={desktopRef}>
+        <div
+          key={compact ? 'compact' : 'wide'}
+          className="desktop"
+          style={styles}
+          ref={desktopRef}
+        >
           {url && (
             <img
               className="desktop-wallpaper"
@@ -358,9 +377,6 @@ export function Preview({ theme }: { theme: ThemeDocument }) {
         </div>
       </div>
       <div className="preview-controls">
-        <span>
-          <Monitor size={14} /> 16:9
-        </span>
         <div>
           {(
             [

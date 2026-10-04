@@ -18,11 +18,15 @@ for (const viewport of [
     const nav = page.getByRole('navigation', { name: 'Renk grupları' });
     await nav.getByRole('button', { name: 'Terminal paleti' }).click();
     await expect(
-      page.locator('details[data-color-group="terminal"]'),
-    ).toHaveAttribute('open', '');
+      page.getByRole('region', { name: 'Terminal paleti' }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('region', { name: 'Temel renkler' }),
+    ).toBeHidden();
     const lastField = page
-      .locator('details[data-color-group="terminal"] .color-field')
+      .locator('[data-color-group="terminal"] .color-field')
       .last();
+    await lastField.scrollIntoViewIfNeeded();
     const key = (await lastField.locator('small').textContent())!.replaceAll(
       '_',
       '-',
@@ -44,6 +48,16 @@ for (const viewport of [
     await expect(
       page.getByRole('textbox', { name: 'Vurgu', exact: true }),
     ).toBeInViewport();
+    await expect(
+      page.getByRole('region', { name: 'Terminal paleti' }),
+    ).toBeHidden();
+    await nav.getByRole('button', { name: 'Yüzeyler ve metin' }).click();
+    await page
+      .getByRole('textbox', { name: 'Koyu yüzey', exact: true })
+      .fill('#654321');
+    await expect(desktop).toHaveCSS('--p-dark-background', '#654321');
+    await nav.getByRole('button', { name: 'Terminal paleti' }).click();
+    await expect(lastField.getByRole('textbox')).toHaveValue('#123456');
     await page.locator('#language').selectOption('en');
     await expect(
       page.getByRole('navigation', { name: 'Color groups' }),
@@ -51,5 +65,20 @@ for (const viewport of [
     await expect(
       page.getByRole('button', { name: 'Terminal palette', exact: true }),
     ).toBeVisible();
+    if (viewport.width > 760) {
+      expect(originalBounds.height).toBeGreaterThan(480);
+      expect(originalBounds.width).toBeGreaterThan(880);
+      await page.setViewportSize({ width: 390, height: 844 });
+      await expect(desktop).toBeVisible();
+      await expect(page.locator('.terminal-window')).toBeVisible();
+      await page.setViewportSize(viewport);
+      await page
+        .getByRole('button', { name: 'colors.toml', exact: true })
+        .click();
+      await expect(page.locator('.source-panel')).toBeVisible();
+      await page.getByRole('button', { name: 'Desktop', exact: true }).click();
+      await expect(desktop).toBeVisible();
+      await expect(page.locator('.terminal-window')).toBeVisible();
+    }
   });
 }

@@ -158,8 +158,12 @@ test('picker fits narrow screens, follows resize, supports touch and opens above
     await page.keyboard.press('Escape');
   }
 
-  await page.locator('summary').filter({ hasText: 'Terminal paleti' }).click();
-  const lastTrigger = page.locator('.color-trigger').last();
+  await page
+    .getByRole('button', { name: 'Terminal paleti', exact: true })
+    .click();
+  const lastTrigger = page
+    .locator('[data-color-group="terminal"] .color-trigger')
+    .last();
   await lastTrigger.scrollIntoViewIfNeeded();
   await lastTrigger.tap();
   const lowerPicker = page.getByRole('dialog');

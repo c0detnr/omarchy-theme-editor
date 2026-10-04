@@ -108,27 +108,9 @@ export default function App() {
   const panelBody = useRef<HTMLDivElement>(null);
   function jumpToColors(group: string) {
     setColorGroup(group);
-    const body = panelBody.current;
-    if (!body) return;
-    body
-      .querySelectorAll<HTMLDetailsElement>('details[data-color-group]')
-      .forEach((section) => {
-        section.open = section.dataset.colorGroup === group;
-      });
-    requestAnimationFrame(() => {
-      const target = body.querySelector<HTMLElement>(
-        `[data-color-group="${group}"]`,
-      );
-      if (target)
-        body.scrollTo({
-          top:
-            target.getBoundingClientRect().top -
-            body.getBoundingClientRect().top +
-            body.scrollTop -
-            16,
-        });
-    });
+    panelBody.current?.scrollTo({ top: 0 });
   }
+
   const [exportOpen, setExportOpen] = useState(false);
   const [report, setReport] = useState<ImportResult | null>(null);
   const [notice, setNotice] = useState<{
@@ -242,7 +224,12 @@ export default function App() {
     <>
       <header className="app-header">
         <div className="app-brand">
-          <img src={`${import.meta.env.BASE_URL}omarchy-logo.svg`} alt="Omarchy" width="32" height="32" />
+          <img
+            src={`${import.meta.env.BASE_URL}omarchy-logo.svg`}
+            alt="Omarchy"
+            width="32"
+            height="32"
+          />
           <h1>Theme Editor</h1>
         </div>
         <div className="language-select preset-select">
@@ -346,8 +333,7 @@ export default function App() {
                 <ArrowUpFromLine size={15} /> {t('İçe Aktar')}
               </button>
               <button className="primary" onClick={() => setExportOpen(true)}>
-                <ArrowDownToLine size={15} /> {t('Dışa Aktar')}{' '}
-                <ChevronDown size={13} />
+                <ArrowDownToLine size={15} /> {t('Dışa Aktar')}
               </button>
             </div>
             <input
@@ -471,55 +457,57 @@ export default function App() {
               <div className="panel-body" ref={panelBody}>
                 {tab === 'colors' && (
                   <>
-                    <div className="section-heading" data-color-group="primary">
-                      <h2>{t('Temel renkler')}</h2>
-                    </div>
-                    <div className="mode-control">
-                      <span>{t('Görünüm modu')}</span>
-                      <div>
-                        <button
-                          className={theme.mode === 'dark' ? 'active' : ''}
-                          aria-pressed={theme.mode === 'dark'}
-                          onClick={() =>
-                            change((t) =>
-                              t.mode === 'dark' ? t : { ...t, mode: 'dark' },
-                            )
-                          }
-                        >
-                          <Moon size={13} /> {t('Koyu')}
-                        </button>
-                        <button
-                          className={theme.mode === 'light' ? 'active' : ''}
-                          aria-pressed={theme.mode === 'light'}
-                          onClick={() =>
-                            change((t) =>
-                              t.mode === 'light' ? t : { ...t, mode: 'light' },
-                            )
-                          }
-                        >
-                          <Sun size={13} /> {t('Açık')}
-                        </button>
+                    <section
+                      data-color-group="primary"
+                      aria-label={t('Temel renkler')}
+                      hidden={colorGroup !== 'primary'}
+                    >
+                      <div className="mode-control">
+                        <span>{t('Görünüm modu')}</span>
+                        <div>
+                          <button
+                            className={theme.mode === 'dark' ? 'active' : ''}
+                            aria-pressed={theme.mode === 'dark'}
+                            onClick={() =>
+                              change((t) =>
+                                t.mode === 'dark' ? t : { ...t, mode: 'dark' },
+                              )
+                            }
+                          >
+                            <Moon size={13} /> {t('Koyu')}
+                          </button>
+                          <button
+                            className={theme.mode === 'light' ? 'active' : ''}
+                            aria-pressed={theme.mode === 'light'}
+                            onClick={() =>
+                              change((t) =>
+                                t.mode === 'light'
+                                  ? t
+                                  : { ...t, mode: 'light' },
+                              )
+                            }
+                          >
+                            <Sun size={13} /> {t('Açık')}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <div className="color-fields">
-                      {primaryKeys.map((key) => (
-                        <ColorField
-                          key={key}
-                          colorKey={key}
-                          value={theme.palette[key]}
-                          palette={theme.palette}
-                          onChange={updateColor}
-                        />
-                      ))}
-                    </div>
-                    <details className="advanced" data-color-group="surfaces">
-                      <summary>
-                        {t('Yüzeyler ve metin')}{' '}
-                        <span>
-                          {surfaceKeys.length} {t('renk')}{' '}
-                          <ChevronDown size={13} />
-                        </span>
-                      </summary>
+                      <div className="color-fields">
+                        {primaryKeys.map((key) => (
+                          <ColorField
+                            key={key}
+                            colorKey={key}
+                            value={theme.palette[key]}
+                            palette={theme.palette}
+                            onChange={updateColor}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                    <section
+                      data-color-group="surfaces"
+                      aria-label={t('Yüzeyler ve metin')}
+                      hidden={colorGroup !== 'surfaces'}
+                    >
                       <div>
                         {surfaceKeys.map((key) => (
                           <ColorField
@@ -531,15 +519,12 @@ export default function App() {
                           />
                         ))}
                       </div>
-                    </details>
-                    <details className="advanced" data-color-group="terminal">
-                      <summary>
-                        {t('Terminal paleti')}{' '}
-                        <span>
-                          {terminalKeys.length} {t('renk')}{' '}
-                          <ChevronDown size={13} />
-                        </span>
-                      </summary>
+                    </section>
+                    <section
+                      data-color-group="terminal"
+                      aria-label={t('Terminal paleti')}
+                      hidden={colorGroup !== 'terminal'}
+                    >
                       <div>
                         {terminalKeys.map((key) => (
                           <ColorField
@@ -551,7 +536,7 @@ export default function App() {
                           />
                         ))}
                       </div>
-                    </details>
+                    </section>
                   </>
                 )}
                 {tab === 'backgrounds' && (
@@ -606,20 +591,6 @@ export default function App() {
               </div>
             </aside>
             <div className="canvas-area">
-              <div className="canvas-tabs">
-                <button
-                  className={!source ? 'active' : ''}
-                  onClick={() => setSource(false)}
-                >
-                  <Layers3 size={14} /> {t('Masaüstü')}
-                </button>
-                <button
-                  className={source ? 'active' : ''}
-                  onClick={() => setSource(true)}
-                >
-                  <Code2 size={14} /> colors.toml
-                </button>
-              </div>
               {source ? (
                 <section
                   className="source-panel"
@@ -640,7 +611,21 @@ export default function App() {
               )}
               <div className="palette-overview">
                 <div>
-                  <h2>{t('Palet')}</h2>
+                  <div className="canvas-tabs">
+                    <button
+                      className={!source ? 'active' : ''}
+                      onClick={() => setSource(false)}
+                    >
+                      <Layers3 size={14} /> {t('Masaüstü')}
+                    </button>
+                    <button
+                      className={source ? 'active' : ''}
+                      onClick={() => setSource(true)}
+                    >
+                      <Code2 size={14} /> colors.toml
+                    </button>
+                  </div>
+                  <h2 className="sr-only">{t('Palet')}</h2>
                   <span role="status">
                     {copied && t('{value} kopyalandı', { value: copied })}
                   </span>
