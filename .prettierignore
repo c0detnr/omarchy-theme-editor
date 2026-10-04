@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.research/
+artifacts/
+test-results/
+playwright-report/
+package-lock.json
+*.toml
+*.tsbuildinfo
+.agents/
+skills-lock.json

@@ -1,0 +1,23 @@
+node_modules/
+dist/
+*.tsbuildinfo
+test-results/
+playwright-report/
+.research/
+
+# Local agent state and generated verification artifacts
+.agents/
+.planning/
+.research/
+artifacts/
+skills-lock.json
+task_plan.md
+findings.md
+progress.md
+
+# Local environment and editor files
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
