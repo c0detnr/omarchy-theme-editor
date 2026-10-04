@@ -2,6 +2,8 @@
 
 **English** | [Türkçe](README.tr.md)
 
+[**Try it online →**](https://c0detnr.github.io/omarchy-theme-editor/)
+
 A browser-based editor for creating, previewing and downloading Omarchy themes. Built with React, TypeScript and Vite, with English (default) and Turkish interfaces. No server, account or cloud storage is required.
 
 I love Omarchy! I made this project to make it easier to create my own themes and share them with the Omarchy community. ❤️

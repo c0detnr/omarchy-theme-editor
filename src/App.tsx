@@ -242,7 +242,7 @@ export default function App() {
     <>
       <header className="app-header">
         <div className="app-brand">
-          <img src="/omarchy-logo.svg" alt="Omarchy" width="32" height="32" />
+          <img src={`${import.meta.env.BASE_URL}omarchy-logo.svg`} alt="Omarchy" width="32" height="32" />
           <h1>Theme Editor</h1>
         </div>
         <div className="language-select preset-select">

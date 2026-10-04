@@ -2,6 +2,8 @@
 
 [English](README.md) | **Türkçe**
 
+[**Tarayıcıda dene →**](https://c0detnr.github.io/omarchy-theme-editor/)
+
 İngilizce (varsayılan) ve Türkçe arayüzü olan, tarayıcı içinde çalışan bir Omarchy tema editörü. React + TypeScript + Vite kullanır. Sunucu, hesap veya bulut depolama gerektirmez.
 
 Omarchy’yi çok seviyorum; bu projeyi kendi temalarımı kolayca hazırlamak ve Omarchy topluluğuyla paylaşmak için yaptım. ❤️
