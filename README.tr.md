@@ -69,6 +69,20 @@ JSON yorum satırı ayrıca seçilen arka planı korur. `icons.theme` gerçek ik
 
 Klasör adı `[a-z0-9_][a-z0-9._+-]*` biçiminde, en fazla 100 karakter olmalıdır. Görünen tema adı Türkçe olabilir; klasör adı otomatik oluşturulur ve dışa aktarma penceresinde ayrıca düzenlenebilir. Tema klasörünü `~/.config/omarchy/themes/` içine yerleştirin ve Omarchy tema menüsünden seçin. Omarchy uygulama ayarlarını bu paletten üretir.
 
+## GitHub Pages
+
+Canlı site, derlenmiş `gh-pages` dalından ücretsiz sunulur. Yalnızca `main` dalını güncellemek bu dalı güncellemez.
+
+Depo adresine uygun çıktıyı oluşturmak için:
+
+```sh
+GITHUB_PAGES=true npm run build
+```
+
+`dist/` içeriğini, boş bir `.nojekyll` dosyasıyla birlikte `gh-pages` dalının köküne gönderin. Kaynak dosyalar `main` dalında kalır.
+
+`.github/workflows/pages.yml` içinde isteğe bağlı, elle başlatılan bir Actions akışı bulunur. Kullanmak için **Settings → Pages → Source** bölümünü **GitHub Actions** yapıp Actions sekmesinden **Deploy to GitHub Pages** akışını başlatın. Hesapta Actions kullanımının açık olması gerekir.
+
 ## Doğrulama
 
 ```sh

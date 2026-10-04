@@ -79,6 +79,20 @@ Extract the ZIP and place the theme folder under `~/.config/omarchy/themes/`, th
 
 The editor does not modify local system settings. Applying themes directly, importing from GitHub URLs, editing `shell.toml`, accounts and cloud storage are outside its current scope.
 
+## GitHub Pages
+
+The live site is served free of charge from the compiled `gh-pages` branch. Updating `main` alone does not update that branch.
+
+Build the site for its repository path with:
+
+```sh
+GITHUB_PAGES=true npm run build
+```
+
+Publish the contents of `dist/` to the root of `gh-pages`, including an empty `.nojekyll` file. Keep the source files on `main`.
+
+An optional manual Actions workflow is provided in `.github/workflows/pages.yml`. To use it, set **Settings → Pages → Source** to **GitHub Actions**, then run **Deploy to GitHub Pages** from the Actions tab. This requires Actions to be available on the repository’s account.
+
 ## Development
 
 ```sh
